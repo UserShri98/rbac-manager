@@ -7,8 +7,12 @@ const app=express();
 connectDB();
 
 app.use(cors({
-    origin:"http://localhost:5173",
-    credentials:true
+  origin: [
+    "https://rbac-manager.vercel.app/",
+    "http://localhost:5173"
+    
+  ],
+  credentials: true,
 }));
 app.use(express.json());
 
