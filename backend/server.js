@@ -8,7 +8,7 @@ connectDB();
 
 app.use(cors({
   origin: [
-    "https://rbac-manager.vercel.app/",
+    "https://rbac-manager.vercel.app",
     "http://localhost:5173"
     
   ],
