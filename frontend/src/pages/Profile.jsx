@@ -1,5 +1,7 @@
 import api from "../api/axios";
 import {useEffect,useState} from "react";
+const BACKEND_URL = import.meta.env.VITE_API_BASE_URL.replace("/api", "");
+
 
 export default function Profile(){
   const [profile,setProfile]=useState(null);
@@ -76,15 +78,14 @@ export default function Profile(){
             <div className="relative -mt-16 sm:-mt-20 mb-8">
               <div className="inline-block">
                 <img
-                  src={
-                    previewUrl ||
-                    (profile.profilePic
-                      ? `http://localhost:6500${profile.profilePic}`
-                      : "https://via.placeholder.com/150")
-                  }
-                  alt="Profile"
-                  className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-4 sm:border-6 border-white shadow-xl object-cover"
-                />
+  src={
+    previewUrl ||
+    (profile.profilePic
+      ? `${BACKEND_URL}${profile.profilePic}`
+      : "https://via.placeholder.com/150")
+  }
+  className="w-32 h-32 rounded-full mx-auto object-cover"
+/>
                 <div className="absolute bottom-0 right-0 bg-indigo-600 text-white rounded-full p-2 sm:p-2.5 shadow-lg cursor-pointer hover:bg-indigo-700 transition-colors">
                   <svg
                     className="w-5 h-5 sm:w-6 sm:h-6"
