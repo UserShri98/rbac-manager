@@ -4,6 +4,8 @@ import {useEffect,useState} from "react";
 export default function Tasks() {
   const [tasks,setTasks]=useState([]);
   const [status,setStatus]=useState("");
+  const [search, setSearch] = useState("");
+
 
   const [form,setForm]=useState({
     title:"",
@@ -18,14 +20,19 @@ export default function Tasks() {
     status:"pending",
   });
 
-  const fetchTasks=async()=>{
-    const res=await api.get(`/tasks${status? `?status=${status}`: ""}`);
-    setTasks(res.data);
-  };
+ const fetchTasks=async()=>{
+  const queryParams=new URLSearchParams();
 
-  useEffect(()=>{
-    fetchTasks();
-  },[status]);
+     if (status) queryParams.append("status",status);
+  if (search) queryParams.append("search",search);
+
+  const res=await api.get(`/tasks?${queryParams.toString()}`);
+  setTasks(res.data);
+};
+useEffect(() => {
+  fetchTasks();
+}, [status, search]);
+
 
   const createTask=async(e)=>{
     e.preventDefault();
@@ -147,22 +154,30 @@ export default function Tasks() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-5 sm:p-6 mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
               <span className="text-xl">🔍</span> Filter Tasks
-            </h3>
-            <select
-              className="px-4 py-2.5 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition-all duration-200 outline-none bg-white cursor-pointer font-medium text-gray-700"
-              onChange={(e) => setStatus(e.target.value)}
-              value={status}
-            >
-              <option value="">All Tasks</option>
-              <option value="pending">⏳ Pending</option>
-              <option value="in-progress">🚀 In Progress</option>
-              <option value="completed">✓ Completed</option>
-            </select>
+              </h3>
+              <input
+  type="text"
+  placeholder="Search tasks..."
+  value={search}
+  onChange={(e)=>setSearch(e.target.value)}
+  className="px-4 py-2.5 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 outline-none"
+/>
+
+              <select
+                className="px-4 py-2.5 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100 transition-all duration-200 outline-none bg-white cursor-pointer font-medium text-gray-700"
+                onChange={(e) => setStatus(e.target.value)}
+                value={status}
+              >
+                <option value="">All Tasks</option>
+                <option value="pending">⏳ Pending</option>
+                <option value="in-progress">🚀 In Progress</option>
+                <option value="completed">✓ Completed</option>
+              </select>
+            </div>
           </div>
-        </div>
 
         {!tasks.length ? (
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-12 text-center">

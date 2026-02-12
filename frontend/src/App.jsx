@@ -7,8 +7,10 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Tasks from "./pages/Tasks";
 import Profile from "./pages/Profile";
+import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
+import PublicRoute from "./components/PublicRoute";
 
 export default function App(){
   const {token}=useContext(AuthContext);
@@ -25,8 +27,13 @@ export default function App(){
           }
         />
 
-        <Route path="/login" element={<Login />}/>
-        <Route path="/register" element={<Register />}/>
+        <Route element={<PublicRoute />}>
+                  <Route path="/register" element={<Register />}/>
+
+          <Route path="/login" element={<Login />} />
+          {/* Add other public routes like signup here */}
+        </Route>
+       
 
         <Route
           path="/dashboard"
@@ -36,6 +43,8 @@ export default function App(){
             </ProtectedRoute>
           }
         />
+
+
         <Route
           path="/tasks"
           element={
@@ -52,6 +61,7 @@ export default function App(){
             </ProtectedRoute>
           }
         />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,19 +1,37 @@
 const Task=require('../models/task.model')
 
-exports.getTasks=async(req,res,next)=>{
-  try{
-    const filter=req.user.role==="admin"?{}:{ createdBy: req.user.id };
+exports.getTasks = async (req, res, next) => {
+  try {
+    const { status, search } = req.query;
 
-    if(req.query.status){
-        filter.status=req.query.status;
+    // Base filter (Role based)
+    const filter =
+      req.user.role === "admin"
+        ? {}
+        : { createdBy: req.user.id };
+
+    // Status filter
+    if (status) {
+      filter.status = status;
     }
 
-    const tasks=await Task.find(filter).populate("createdBy","username");
+    // Search filter
+    if (search) {
+      filter.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } }
+      ];
+    }
+
+    const tasks = await Task.find(filter)
+      .populate("createdBy", "username");
+
     res.json(tasks);
-  }catch(err){
-       next(err);
+  } catch (err) {
+    next(err);
   }
 };
+
 
 exports.createTask=async(req,res)=>{
     const task=await Task.create({...req.body,

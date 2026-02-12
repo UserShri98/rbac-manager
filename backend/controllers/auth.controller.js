@@ -4,6 +4,7 @@ const ApiError=require("../utils/ApiError");
 
 exports.register=async(req,res,next)=>{
     try{
+      console.log("hello")
     const user=await User.create(req.body);
     res.status(201).json({message:"Registration is successful"});
 }catch(err){

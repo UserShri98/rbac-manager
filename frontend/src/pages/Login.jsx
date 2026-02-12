@@ -4,6 +4,7 @@ import {AuthContext} from "../context/AuthContext";
 import {useNavigate,Link} from "react-router-dom";
 
 export default function Login(){
+  console.log("login")
   const {login}=useContext(AuthContext);
   const navigate=useNavigate();
 
